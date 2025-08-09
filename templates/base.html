@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tweeter</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; }
+        .error { color: red; margin-bottom: 10px; }
+        .tweet { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .tweet img { max-width: 100%; height: auto; margin-top: 5px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Tweeter</h1>
+
+    {% if error_message %}
+        <div class="error">{{ error_message }}</div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <textarea name="content" placeholder="What's happening?" rows="3" style="width: 100%;"></textarea><br><br>
+        <input type="file" name="image"><br><br>
+        <button type="submit">Post Tweet</button>
+    </form>
+
+    <hr>
+
+    {% for tweet in tweets %}
+        <div class="tweet">
+            <p>{{ tweet.content }}</p>
+            {% if tweet.image %}
+                <img src="{{ tweet.image.url }}" alt="Tweet Image">
+            {% endif %}
+            <small>Posted on {{ tweet.created_at|date:"Y-m-d H:i" }}</small>
+        </div>
+    {% empty %}
+        <p>No tweets yet. Be the first to post!</p>
+    {% endfor %}
+</body>
+</html>
